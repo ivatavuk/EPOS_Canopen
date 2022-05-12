@@ -31,7 +31,7 @@ class Epos:
     bustype = 'socketcan'
     nodeID = 1
     network = None
-    _connected = False
+    _connected = True
     errorDetected = False
 
     # List of motor types
@@ -300,7 +300,7 @@ class Epos:
     def emcy_error_print(self, emcy_error):
         """Print any EMCY Error Received on CAN BUS
         """
-        if emcy_error.code is 0:
+        if emcy_error.code == 0:
             self.errorDetected = False
         else:
             for code, description in self.emcy_descriptions:
@@ -602,7 +602,7 @@ class Epos:
 
     def print_state(self):
         ID = self.check_state()
-        if ID is -1:
+        if ID == -1:
             print('[{0}:{1}] Error: Unknown state\n'.format(
                 self.__class__.__name__,
                 sys._getframe().f_code.co_name))
@@ -1957,10 +1957,16 @@ class Epos:
             :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Velocity Actual Value']
+        velocity = self.read_object(index, 0x0)
+        if velocity is None:
+            self.log_info("Failed to read current velocity value")
+            return None, False
+        """
         velocity, ok = self.read_object(index, 0x0)
         if not ok:
             self.log_info("Failed to read current velocity value")
             return None, False
+        """
         return velocity, True
 
     def read_velocity_value_averaged(self):
@@ -1973,8 +1979,8 @@ class Epos:
             :ok: A boolean if all requests went ok or not.
         """
         index = self.objectIndex['Velocity Actual Value Averaged']
-        velocity, ok = self.read_object(index, 0x0)
-        if not ok:
+        velocity = self.read_object(index, 0x0)
+        if velocity is None:
             self.log_info("Failed to read current velocity averaged value")
             return None, False
         return velocity, True
@@ -2051,7 +2057,7 @@ def main():
     parser.add_argument('--objDict', action='store', default=None,
                         type=str, help='Object dictionary file', dest='objDict')
     args = parser.parse_args()
-
+    
     # set up logging to file - see previous section for more details
     logging.basicConfig(level=logging.INFO,
                         format='[%(asctime)s.%(msecs)03d] [%(name)-20s]: %(levelname)-8s %(message)s',
