@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+    <name>epos_driver_ros</name>
+    <version>0.0.0</version>
+    <description>
+        epos_driver_ros
+    </description>
+    <author email="ivo.vatavuk@fer.hr">Ivo Vatavuk</author>
+    <maintainer email="ivo.vatavuk@fer.hr">Ivo Vatavuk</maintainer>
+
+    <license>TODO</license>
+    <buildtool_depend>catkin</buildtool_depend>
+
+    <export>
+    </export>
+
+</package>
