@@ -781,7 +781,9 @@ class Epos:
             self.log_info("Velocity out of range")
             return False
         # change to bytes as an int32 value
+        #print("velocity1 = ", velocity)
         velocity = velocity.to_bytes(4, 'little', signed=True)
+        #print("velocity = ", velocity)
         return self.write_object(index, subindex, velocity)
 
     def read_current_mode_setting(self):
@@ -2050,11 +2052,11 @@ def main():
                         type=str, help='Channel to be used', dest='channel')
     parser.add_argument('--bus', '-b', action='store',
                         default='socketcan', type=str, help='Bus type', dest='bus')
-    parser.add_argument('--rate', '-r', action='store', default=None,
+    parser.add_argument('--rate', '-r', action='store', default=125000,
                         type=int, help='bitrate, if applicable', dest='bitrate')
-    parser.add_argument('--nodeID', action='store', default=1, type=int,
+    parser.add_argument('--nodeID', action='store', default=3, type=int,
                         help='Node ID [ must be between 1- 127]', dest='nodeID')
-    parser.add_argument('--objDict', action='store', default=None,
+    parser.add_argument('--objDict', action='store', default='viv_maxon-70_10.eds',
                         type=str, help='Object dictionary file', dest='objDict')
     args = parser.parse_args()
     
@@ -2100,7 +2102,7 @@ def main():
             print("Error 0x%X was found in the log" % error.raw)
 
         print('----------------------------------------------------------', flush=True)
-
+    
     # use simple hex values
     # try to read status word
     statusword = epos.read_object(0x6041, 0)
@@ -2116,9 +2118,9 @@ def main():
     print('----------------------------------------------------------', flush=True)
     print('Testing print of StatusWord and State and ControlWord')
     print('----------------------------------------------------------', flush=True)
-    epos.print_state()
+    #epos.print_state()
     print('----------------------------------------------------------', flush=True)
-    epos.print_statusword()
+    #epos.print_statusword()
     print('----------------------------------------------------------', flush=True)
     # try to read controlword using hex codes
     controlword = epos.read_object(0x6040, 0)
@@ -2139,9 +2141,16 @@ def main():
         controlword = controlword.to_bytes(2, 'little')
         epos.write_object(0x6040, 0, controlword)
         # check led status to see if it is green and blinking
-    epos.print_position_control_parameters()
-    epos.print_motor_config()
-    epos.print_sensor_config()
+    #epos.print_position_control_parameters()
+    #epos.print_motor_config()
+    #epos.print_sensor_config()
+    
+    if epos.change_state("shutdown"): print ("shootali se dolje")
+    #if epos.change_state("switch on"): print ("switchali se on")
+    #if epos.change_state('enable operation'): print ("enableali operation")
+    #if epos.set_op_mode(-2): print ("usli u velocity mode")
+    #if epos.set_velocity_mode_setting(10000): print ("setalli brzinu uspjesno!")
+
     epos.disconnect()
     return
 
