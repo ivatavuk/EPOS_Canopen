@@ -226,8 +226,8 @@ def main():
     while not rospy.is_shutdown():
         set_motor_velocity_commands(epos_motors)
         joint_state_pub.publish(get_joint_states(epos_motors))
-        current_averaged_pub.publish(get_current_averaged(epos_motors))
-        current_pub.publish(get_current(epos_motors))
+        #current_averaged_pub.publish(get_current_averaged(epos_motors))
+        #current_pub.publish(get_current(epos_motors))
         node_rate.sleep()
 
     print("----------------------------Shutting down----------------------------")
